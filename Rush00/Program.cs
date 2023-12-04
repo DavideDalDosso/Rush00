@@ -51,7 +51,7 @@
         Prop lemonade = new Prop();
         lemonade.SetName("Lemonade");
         lemonade.SetDescription("Don't drink that, it's a grenade.\n" +
-            "Not good for serenade. But if you have to, it's never late");
+            "Not good for serenade. But if you have to, it's never lemon late");
         kitchen.AddProp(lemonade);
 
         Prop porcubbus = new Prop();
