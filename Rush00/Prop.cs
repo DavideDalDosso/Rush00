@@ -8,6 +8,8 @@ class Prop
 {
     private string name = "";
     private string description = "";
+    private Action onInteract;
+    private Action onPick;
 
     public void SetName(string name)
     {
@@ -24,5 +26,26 @@ class Prop
     public string GetDescription()
     {
         return description;
+    }
+    public void SetOnPick(Action onPick)
+    {
+        this.onPick = onPick;
+    }
+    public void SetOnInteract(Action onInteract)
+    {
+        this.onInteract = onInteract;
+    }
+    public bool Pick()
+    {
+        if (onPick == null) return false;
+        onPick.Invoke();
+        return true;
+    }
+
+    public bool Interact()
+    {
+        if (onInteract == null) return false;
+        onInteract.Invoke();
+        return true;
     }
 }

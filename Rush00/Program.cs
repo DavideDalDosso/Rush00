@@ -116,6 +116,48 @@
         bedroom.AddProp(nonecld);
         kitchen.AddProp(nonecld);
         livingRoom.AddProp(nonecld);
+        nonecld.SetOnInteract(() => adventureEngine.SetPreviousActionMessage("If you dared to touch it.\nYou would die to the fifth dimension."));
+        nonecld.SetOnPick(() => adventureEngine.SetPreviousActionMessage("You will die if you touch it. I know it blocks the toilet paper but... don't."));
+
+        Prop gun = new Prop();
+        gun.SetName("A Gun");
+        gun.SetDescription("Ayy,\n Ayy,\n Ayy.\nI've got a gun. no girls, girls gotta die.\n" +
+            "Wake up with no hhhuuuueeeeuuuhhh.\n" +
+            "Julioioioiohhhhhh.");
+        bedroom.AddProp(gun);
+        gun.SetOnInteract(() =>
+        {
+            adventureEngine.SetPreviousActionMessage("You gotta pick it up first cowboi.");
+        });
+        gun.SetOnPick(() =>
+        {
+            bedroom.RemoveProp(gun);
+            adventureEngine.SetPreviousActionMessage("You are now American.");
+            adventureEngine.AddInventoryProp(gun);
+        });
+        window.SetOnInteract(() =>
+        {
+            if (adventureEngine.InventoryContains(gun))
+                adventureEngine.SetPreviousActionMessage("You shoot to the sky blasting away two ducks and one balloon,\n" +
+                    "just because everything was so noisy that asserting your dominance was the power move.");
+            else
+                adventureEngine.SetPreviousActionMessage("You scream like an asylum maniac so you don't draw any suspicion that you are secretly\n" +
+                    "the local Plumber Plunder, pirate of the seven pipes.");
+        });
+        skeleton.SetOnInteract(() =>
+        {
+            if (adventureEngine.InventoryContains(gun))
+            {
+                adventureEngine.SetPreviousActionMessage("DODGE THIS YOU CASUL. You blast the skeleton to dust.");
+                Prop dust = new Prop();
+                dust.SetName("Skeleton dust");
+                dust.SetDescription("Guess I was bad to the bone.");
+                livingRoom.AddProp(dust);
+                livingRoom.RemoveProp(skeleton);
+            }
+            else
+                adventureEngine.SetPreviousActionMessage("Despite having more flesh and mass, the skeleton taunts you as he's wayyy to nimble for you to handle");
+        });
 
 
         bedroom.AddExit(hallway);

@@ -10,18 +10,25 @@ class AdventureEngine
     private Room currentRoom;
     private int propsPerLine = 1;
     private string prevActionMessage = "";
+    private List<Prop> inventory = new List<Prop>();
 
     public void InputPrompt()
     {
-        Console.WriteLine("1 = LOOK OBJECT; 2 = GO EXIT");
+        Console.WriteLine("1 = GO EXIT; 2 = LOOK OBJECT; 3 = INTERACT OBJECT; 4 PICK OBJECT");
         int option = Util.ReadNumber<int>( () => Console.WriteLine("Please put a valid option") );
         switch( option)
         {
             case 1:
-                PropLookPrompt();
+                GoExitPrompt();
                 break;
             case 2:
-                GoExitPrompt();
+                PropLookPrompt();
+                break;
+            case 3:
+                PropInteractPrompt();
+                break;
+            case 4:
+                PropPickPrompt();
                 break;
         }
     }
@@ -48,8 +55,10 @@ class AdventureEngine
     }
     public void GoExitPrompt()
     {
-        Console.WriteLine("WHICH EXIT?");
+        Console.WriteLine("WHICH EXIT? - 0 = BACK");
         int exitOption = Util.ReadNumber<int>(() => Console.WriteLine("Please put a valid option"));
+        if (exitOption == 0) return;
+
         var exit = currentRoom.GetExit( exitOption-1 );
         if(exit == null)
         {
@@ -63,8 +72,10 @@ class AdventureEngine
     }
     public void PropLookPrompt()
     {
-        Console.WriteLine("WHICH OBJECT?");
+        Console.WriteLine("WHICH OBJECT? (LOOK) - 0 = BACK");
         int propOption = Util.ReadNumber<int>(() => Console.WriteLine("Please put a valid option"));
+        if (propOption == 0) return;
+
         var prop = currentRoom.GetProp(propOption - 1);
         if (prop == null)
         {
@@ -75,6 +86,40 @@ class AdventureEngine
             return;
         }
         prevActionMessage = prop.GetName() + " - " + prop.GetDescription();
+    }
+    public void PropPickPrompt()
+    {
+        Console.WriteLine("WHICH OBJECT? (PICK) - 0 = BACK");
+        int propOption = Util.ReadNumber<int>(() => Console.WriteLine("Please put a valid option"));
+        if (propOption == 0) return;
+
+        var prop = currentRoom.GetProp(propOption - 1);
+        if (prop == null)
+        {
+            Console.Clear();
+            OutputRoomDesc();
+            Console.WriteLine("Index not available");
+            PropLookPrompt();
+            return;
+        }
+        if(!prop.Pick()) prevActionMessage = "You can't pick this duh...";
+    }
+    public void PropInteractPrompt()
+    {
+        Console.WriteLine("WHICH OBJECT? (INTERACT) - 0 = BACK");
+        int propOption = Util.ReadNumber<int>(() => Console.WriteLine("Please put a valid option"));
+        if (propOption == 0) return;
+
+        var prop = currentRoom.GetProp(propOption - 1);
+        if (prop == null)
+        {
+            Console.Clear();
+            OutputRoomDesc();
+            Console.WriteLine("Index not available");
+            PropLookPrompt();
+            return;
+        }
+        if (!prop.Interact()) prevActionMessage = "You can't interact with this bruh...";
     }
     public void OutputRoomProps()
     {
@@ -111,5 +156,21 @@ class AdventureEngine
     public void SetPropsPerLine(int n)
     {
         propsPerLine = n;
+    }
+    public void SetPreviousActionMessage(string message)
+    {
+        prevActionMessage = message;
+    }
+    public void AddInventoryProp(Prop prop)
+    {
+        inventory.Add(prop);
+    }
+    public void RemoveInventoryProp(Prop prop)
+    {
+        inventory.Remove(prop);
+    }
+    public bool InventoryContains(Prop prop)
+    {
+        return inventory.Contains(prop);
     }
 }

@@ -52,4 +52,8 @@ class Room
         if (index >= props.Count() || index < 0) return null;
         return props[index];
     }
+    public void RemoveProp(Prop prop)
+    {
+        props.Remove(prop);
+    }
 }
